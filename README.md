@@ -32,5 +32,5 @@ Rebuild Your Docker
 
 ## TODO
 
-[ ] Find a more effective way to do this instead of replace char by char (performance issue)
-[ ] Support Vietnamese Unicode 2 byte character
+- [ ] Find a more effective way to do this instead of replace char by char (performance issue)
+- [ ] Support Vietnamese Unicode 2 byte character
