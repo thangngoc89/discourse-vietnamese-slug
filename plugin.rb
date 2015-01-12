@@ -1,3 +1,7 @@
+# name: discourse-vietnamese-slug
+# about: A Discourse plugin to support Vietnamese slug
+# version: 1.0
+# authors: Khoa Nguyen
 # encoding: utf-8
 
 
