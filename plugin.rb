@@ -1,7 +1,7 @@
 # name: discourse-vietnamese-slug
 # about: A Discourse plugin to generate Vietnamese slug
 # version: 0.1
-# authors: Khoa Nguyen
+# authors: Khoa Nguyen, @eviltrout, @riking
 
 after_initialize do
   module ::Slug
