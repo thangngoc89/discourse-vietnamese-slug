@@ -29,4 +29,24 @@ after_initialize do
     end
 
   end
+  
+  module ::UserNameSuggester
+    
+    def self.sanitize_username(name)
+      
+      # For Vietnamese slug
+      vietnamese   = "àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐêùà"
+      replacements = "aaaaaaaaaaaaaaaaaeeeeeeeeeeeiiiiiooooooooooooooooouuuuuuuuuuuyyyyydAAAAAAAAAAAAAAAAAEEEEEEEEEEEIIIIIOOOOOOOOOOOOOOOOOUUUUUUUUUUUYYYYYDeua"
+      name = name.tr(vietnamese, replacements)
+      # End Vietnamese slug
+      
+      name = ActiveSupport::Inflector.transliterate(name)
+      name = name.gsub(/^[^[:alnum:]]+|\W+$/, "")
+                 .gsub(/\W+/, "_")
+                 .gsub(/^\_+/, '')
+      name
+    end
+  
+  end
+
 end
