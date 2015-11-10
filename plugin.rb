@@ -7,25 +7,21 @@
 after_initialize do
   module ::Slug
 
-    def self.for(string)
+    def self.for(string, default = 'topic')
 
       # For Vietnamese slug
       vietnamese   = "àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐêùà"
       replacements = "aaaaaaaaaaaaaaaaaeeeeeeeeeeeiiiiiooooooooooooooooouuuuuuuuuuuyyyyydAAAAAAAAAAAAAAAAAEEEEEEEEEEEIIIIIOOOOOOOOOOOOOOOOOUUUUUUUUUUUYYYYYDeua"
       string = string.tr(vietnamese, replacements)
       # End Vietnamese slug
-
-      slug = string.gsub("'", "").parameterize
-      slug.gsub!("_", "-")
-      # TODO review if ja should use this
-      # ko asked for it to be removed
-      if ['zh_CN', 'ja'].include?(SiteSetting.default_locale)
-        unless defined? Stringex
-          require 'stringex_lite'
-        end
-        slug = string.to_url
-      end
-      slug =~ /[^\d]/ ? slug : '' # Reject slugs that only contain numbers, because they would be indistinguishable from id's.
+      slug = case (SiteSetting.slug_generation_method || :ascii).to_sym
+           when :ascii then self.ascii_generator(string)
+           when :encoded then self.encoded_generator(string)
+           when :none then self.none_generator(string)
+           end
+      # Reject slugs that only contain numbers, because they would be indistinguishable from id's.
+      slug = (slug =~ /[^\d]/ ? slug : '')
+      slug.blank? ? default : slug
     end
 
   end
@@ -44,6 +40,7 @@ after_initialize do
       name = name.gsub(/^[^[:alnum:]]+|\W+$/, "")
                  .gsub(/\W+/, "_")
                  .gsub(/^\_+/, '')
+                 .gsub(/[\-_\.]{2,}/, "_")
       name
     end
   
